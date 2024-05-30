@@ -23,6 +23,6 @@ app.get('/api/test', async(req: Request, res: Response) => {
 
 app.use('/api/v1/user', userRoute)
 
-app.listen(6000, () => {
-    console.log('Sunver running on PORT 6000')
+app.listen(7000, () => {
+    console.log('Sunver running on PORT 7000')
 })

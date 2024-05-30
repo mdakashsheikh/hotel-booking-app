@@ -1,6 +1,11 @@
 import { useForm } from "react-hook-form"
+import { useMutation } from "react-query";
+import * as apiClient from "../api-client";
+import { useAppContext } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
 
-type RegisterFormData = {
+
+export type RegisterFormData = {
     firstName: string;
     lastName: string;
     email: string;
@@ -8,9 +13,30 @@ type RegisterFormData = {
     confirmPassword: string;
 }
 const Register = () => {
-    const  { register } = useForm<RegisterFormData>()
+    const navigate = useNavigate()
+    const { showToast } = useAppContext();
+    const  { 
+        register, 
+        watch, 
+        handleSubmit,
+        formState: {errors}
+    } = useForm<RegisterFormData>()
+
+    const mutation = useMutation(apiClient.register, {
+        onSuccess: () => {
+            showToast({ message: "Registration Success!", type: "SUCCESS"})
+            navigate("/")
+        },
+        onError: (error: Error) => {
+            showToast({ message: error.message, type: "ERROR" })
+        }
+    })
+
+    const onSubmit = handleSubmit((data) => {
+        mutation.mutate(data)
+    })
     return (
-        <form className="flex flex-col gap-5">
+        <form className="flex flex-col gap-5" onSubmit={onSubmit}>
             <h1 className="text-3xl font-bold">Create an Accound</h1>
 
             <div className="flex flex-col md:flex-row gap-5">
@@ -21,6 +47,9 @@ const Register = () => {
                         {...register("firstName", { required: "First Name is required"})}
                     >
                     </input>
+                    {errors.firstName && (
+                        <span className="text-red-500">{errors.firstName.message}</span>
+                    )}
                 </label>
 
                 <label className="text-gray-700 text-sm font-bold flex-1">
@@ -30,6 +59,9 @@ const Register = () => {
                         {...register("lastName", { required: "Last Name is required"})}
                     >
                     </input>
+                    {errors.lastName && (
+                        <span className="text-red-500">{errors.lastName.message}</span>
+                    )}
                 </label>
             </div>
             <label className="text-gray-700 text-sm font-bold flex-1">
@@ -40,6 +72,9 @@ const Register = () => {
                     {...register("email", { required: "Email is required"})}
                 >
                 </input>
+                {errors.email && (
+                    <span className="text-red-500">{errors.email.message}</span>
+                )}
             </label>
 
             <label className="text-gray-700 text-sm font-bold flex-1">
@@ -56,6 +91,9 @@ const Register = () => {
                     })}
                 >
                 </input>
+                {errors.password && (
+                    <span className="text-red-500">{errors.password.message}</span>
+                )}
             </label>
 
             <label className="text-gray-700 text-sm font-bold flex-1">
@@ -63,16 +101,29 @@ const Register = () => {
                 <input 
                     type="password"
                     className="border rounded w-full py-2 px-2 font-normal" 
-                    {...register("confirmPassword", { 
-                        required: "Password is required",
-                        minLength: {
-                            value: 6,
-                            message: "Password must be at least 6 charecters"
+                    {...register("confirmPassword", {
+                        validate: (val) => {
+                            if(!val) {
+                                return "Confirm Password is required"
+                            } else if(watch("password") != val) {
+                                return "Your password do not match"
+                            }
                         }
                     })}
                 >
                 </input>
+                {errors.confirmPassword && (
+                    <span className="text-red-500">{errors.confirmPassword.message}</span>
+                )}
             </label>
+            <span>
+                <button 
+                    type="submit"
+                    className="bg-blue-600 text-white p-2 rounded font-bold hover:bg-blue-500 text-xl"
+                >
+                    Create Account
+                </button>
+            </span>
         </form>
     )
 }
