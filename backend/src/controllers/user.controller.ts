@@ -27,7 +27,7 @@ export const registerController = async(req: Request, res: Response) => {
 
         const token = jwt.sign(
             { userId: user.id }, 
-            process.env.JWT_SECTER_KEY as string, {
+            process.env.JWT_SECRET_KEY as string, {
                 expiresIn: "1d"
             }
         )
@@ -83,7 +83,7 @@ export const loginController = async(req: Request, res: Response) => {
 
         const token = jwt.sign(
             { userId: user.id}, 
-            process.env.JWT_SECTER_KEY as string, {
+            process.env.JWT_SECRET_KEY as string, {
                 expiresIn: "1d"
             }
         )
