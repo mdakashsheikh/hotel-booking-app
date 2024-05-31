@@ -21,6 +21,6 @@ router.post("/login", [
     check("password", "Password with 6 or more characters required").isLength({ min: 6}),
 ], loginController)
 
-router.get("/validate-tooken", verifyToken, validateTokenController)
+router.get("/validate-token", verifyToken, validateTokenController)
 
 export default router;
