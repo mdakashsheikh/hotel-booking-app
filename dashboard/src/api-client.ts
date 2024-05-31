@@ -19,7 +19,7 @@ export const register = async(formData: RegisterFormData) => {
 }
 
 export const validateToken = async() => {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/validate-token`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/user/validate-token`, {
         credentials: "include",
     })
 
