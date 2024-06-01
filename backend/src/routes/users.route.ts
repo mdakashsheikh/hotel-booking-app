@@ -1,6 +1,7 @@
 import express from 'express'
 import { 
     loginController, 
+    logoutController, 
     registerController, 
     validateTokenController 
 } from '../controllers/user.controller';
@@ -22,5 +23,7 @@ router.post("/login", [
 ], loginController)
 
 router.get("/validate-token", verifyToken, validateTokenController)
+
+router.post("/logout", logoutController)
 
 export default router;
