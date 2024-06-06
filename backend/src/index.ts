@@ -7,7 +7,7 @@ import userRoute  from './routes/users.route'
 
 //Database conntection
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string)
-    .then(() => console.log('Database Conntected...'))
+    .then(() => console.log('Database Conntected: ', process.env.MONGODB_CONNECTION_STRING))
     .catch((error) => console.log(`Mongo Connection error: ${error.message}`))
 
 
